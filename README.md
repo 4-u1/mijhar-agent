@@ -530,6 +530,17 @@ render.yaml                   optional cloud blueprint
 - Next: a live pass^k run, a larger held-out attack set, per-reviewer asymmetric signatures (WebAuthn), an authoritative regulatory corpus.
 
 <details>
+<summary><b>Hugging Face Space (Docker), one folder to upload</b></summary>
+
+```bash
+sh deploy/huggingface-space/build_space.sh          # -> dist/space (Dockerfile, README with Space metadata, backend)
+hf upload <your-hf-user>/mijhar dist/space . --repo-type space
+```
+
+Or create a Space (SDK: **Docker**) and drag the files of `dist/space/` into its **Files** tab. Then set the secrets listed in `deploy/huggingface-space/README.space.md` (`MIJHAR_SIGNING_SECRET`, `MIJHAR_CLIENT_KEYS`, `MIJHAR_REVIEWERS`, optional `OPENROUTER_API_KEY` + `MIJHAR_ALLOW_LIVE=1`) and open `https://<space>.hf.space/agent/#ck=…&rid=…&rk=…`. Free Spaces have ephemeral storage: the ledger resets on restart. Not deployed from the review environment.
+</details>
+
+<details>
 <summary><b>Optional cloud deployment (Render + Vercel), not tested here</b></summary>
 
 1. Push the repo to GitHub (`.env` is git-ignored).

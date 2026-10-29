@@ -22,14 +22,17 @@ from starlette.requests import Request
 from starlette.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from starlette.routing import Route
 
-from ..config import check_secret
+from ..config import check_secret, env
 from .service import AgentService, ServiceError
 from .store import StoreError
 
 WEB = Path(__file__).resolve().parent.parent / "data" / "agent" / "web"
 MAX_BODY = 450_000
+# frame-ancestors: 'none' by default; a Hugging Face Space shows the app inside an iframe on huggingface.co,
+# so the Space sets MIJHAR_FRAME_ANCESTORS="https://huggingface.co".
+_FA = (env("MIJHAR_FRAME_ANCESTORS", "") or "").strip() or "'none'"
 CSP = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; "
-       "font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'")
+       f"font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors {_FA}")
 SEC = {"X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "Content-Security-Policy": CSP,
        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"}
 
