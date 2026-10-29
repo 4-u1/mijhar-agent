@@ -530,7 +530,11 @@ render.yaml                   optional cloud blueprint
 - Next: a live pass^k run, a larger held-out attack set, per-reviewer asymmetric signatures (WebAuthn), an authoritative regulatory corpus.
 
 <details>
-<summary><b>Hugging Face Space (Docker), one folder to upload</b></summary>
+<summary><b>Hugging Face Space (Docker): automatic deploy from GitHub</b></summary>
+
+**Automatic:** add two repository secrets on GitHub (Settings → Secrets and variables → Actions): `HF_TOKEN` (a Hugging Face token with **write** access) and `MIJHAR_DEMO_PASSWORD` (a password you choose). Every push to `main`, or **Actions → Deploy to Hugging Face Space → Run workflow**, builds the Space, uploads it, and sets its secrets (`.github/workflows/deploy-hf-space.yml`). Then open `https://<hf-user>-mijhar.hf.space/agent/#ck=<password>&rid=eng.demo&rk=<password>`. The demo uses one password as both client and reviewer key; use separate keys for anything beyond a demo.
+
+**By hand:**
 
 ```bash
 sh deploy/huggingface-space/build_space.sh          # -> dist/space (Dockerfile, README with Space metadata, backend)

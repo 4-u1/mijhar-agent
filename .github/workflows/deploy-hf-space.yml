@@ -1,0 +1,59 @@
+# Deploys the agent to a Hugging Face Space (Docker) on every push to main, or by hand from the Actions tab.
+# Needs two repository secrets (Settings -> Secrets and variables -> Actions):
+#   HF_TOKEN              a Hugging Face token with WRITE access
+#   MIJHAR_DEMO_PASSWORD  a password you choose; it becomes the client key AND the reviewer key of the demo
+# Optional repository variable HF_SPACE (default: <your-hf-user>/mijhar).
+# Open afterwards: https://<hf-user>-mijhar.hf.space/agent/#ck=<password>&rid=eng.demo&rk=<password>
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip when HF_TOKEN is not set
+        id: guard
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then echo "HF_TOKEN secret not set; skipping deploy."; echo "go=false" >> "$GITHUB_OUTPUT"; else echo "go=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.go == 'true'
+        with:
+          python-version: "3.12"
+      - name: Build the Space folder
+        if: steps.guard.outputs.go == 'true'
+        run: sh deploy/huggingface-space/build_space.sh
+      - name: Upload and configure the Space
+        if: steps.guard.outputs.go == 'true'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          DEMO_PASSWORD: ${{ secrets.MIJHAR_DEMO_PASSWORD }}
+          HF_SPACE: ${{ vars.HF_SPACE }}
+        run: |
+          pip install --quiet "huggingface_hub>=0.25"
+          python - <<'PY'
+          import hashlib, hmac, os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          repo = os.environ.get("HF_SPACE") or f"{api.whoami()['name']}/mijhar"
+          api.create_repo(repo, repo_type="space", space_sdk="docker", exist_ok=True)
+          api.upload_folder(folder_path="dist/space", repo_id=repo, repo_type="space",
+                            commit_message=f"Deploy from GitHub {os.environ.get('GITHUB_SHA', '')[:7]}")
+          pw = os.environ.get("DEMO_PASSWORD", "")
+          if pw:
+              digest = hashlib.sha256(pw.encode()).hexdigest()
+              signing = hmac.new(os.environ["HF_TOKEN"].encode(), b"mijhar-signing:" + pw.encode(), hashlib.sha256).hexdigest()
+              for k, v in {"MIJHAR_CLIENT_KEYS": f"ui:{digest}", "MIJHAR_REVIEWERS": f"eng.demo:{digest}",
+                           "MIJHAR_SIGNING_SECRET": signing}.items():
+                  api.add_space_secret(repo, k, v)          # values never printed
+          else:
+              print("MIJHAR_DEMO_PASSWORD not set: the Space runs but every request needs keys you set by hand.")
+          sub = repo.replace("/", "-").replace("_", "-").lower()
+          print(f"Space: https://huggingface.co/spaces/{repo}\nApp:   https://{sub}.hf.space/agent/")
+          PY
