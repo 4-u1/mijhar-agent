@@ -18,7 +18,7 @@
 ![Languages](https://img.shields.io/badge/UI-Arabic%20%2B%20English-8B5CF6)
 ![PDPL](https://img.shields.io/badge/PDPL-offline%20by%20default-0F6E5A)
 <br>
-[![Slides](https://img.shields.io/badge/%F0%9F%8E%9E%20Slides-open%20the%2065--slide%20deck-F2B04A?labelColor=1C3157)](https://raw.githack.com/4-u1/mijhar-agent/main/docs/slides/index.html)
+[![Slides](https://img.shields.io/badge/%F0%9F%8E%9E%20Slides-open%20the%2065--slide%20deck-F2B04A?labelColor=1C3157)](https://4-u1.github.io/mijhar-agent/slides/)
 [![PDF EN](https://img.shields.io/badge/PDF-English-1C3157)](docs/slides/MIJHAR-Capstone-EN.pdf)
 [![PDF AR](https://img.shields.io/badge/PDF-%D8%B9%D8%B1%D8%A8%D9%8A-0E9F7E)](docs/slides/MIJHAR-Capstone-AR.pdf)
 
@@ -509,11 +509,11 @@ Every push runs [**CI**](https://github.com/4-u1/mijhar-agent/actions/workflows/
 
 | | File | What it is |
 |---|---|---|
-| 🖥 | **[Open the deck in the browser ↗](https://raw.githack.com/4-u1/mijhar-agent/main/docs/slides/index.html)** · source [`docs/slides/index.html`](docs/slides/index.html) | the full 65-slide deck in the course's slide format: ← → to move, **Contents** to jump, **Notes** for speaker notes |
+| 🖥 | **[Open the deck in the browser ↗](https://4-u1.github.io/mijhar-agent/slides/)** · source [`docs/slides/index.html`](docs/slides/index.html) | the full 65-slide deck in the course's slide format: ← → to move, **Contents** to jump, **Notes** for speaker notes |
 | 📄 | [`docs/slides/MIJHAR-Capstone-EN.pdf`](docs/slides/MIJHAR-Capstone-EN.pdf) | the 25-slide talk in English (Day 5 structure) |
 | 📄 | [`docs/slides/MIJHAR-Capstone-AR.pdf`](docs/slides/MIJHAR-Capstone-AR.pdf) | the same talk in Arabic, right to left |
 
-GitHub shows `.html` files as source, so the browser link above serves the same file from this repository. With GitHub Pages enabled on `main` → `/docs`, the deck is also at `https://4-u1.github.io/mijhar-agent/slides/`.
+The deck is published with GitHub Pages from `main` → `/docs` at **https://4-u1.github.io/mijhar-agent/slides/**. Jump to a slide with `#N`, for example `…/slides/#48`.
 
 ---
 
