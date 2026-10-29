@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>مِجهر · وكيل التدقيق</title>
+<link rel="icon" href="static/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="static/app.css">
+<script src="static/app.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <img src="static/icon.svg" alt="" width="30" height="30">
+      <div>
+        <h1 data-i18n="title">مِجهر</h1>
+        <p data-i18n="subtitle">وكيل تدقيق المستندات بقرار بشري موقّع</p>
+      </div>
+    </div>
+    <div class="bar-actions">
+      <span id="planner" class="badge" title=""></span>
+      <button id="lang" class="ghost" type="button" aria-label="Language">EN</button>
+      <button id="caseBtn" class="ghost case-toggle" type="button" aria-controls="case" aria-expanded="false" data-i18n="caseFile">ملف القضية</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="talk" aria-label="Conversation">
+      <div id="log" class="log" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+      <form id="keyForm" class="keycard" hidden>
+        <h2 data-i18n="keyTitle">ابدأ بمفتاح الوصول</h2>
+        <p data-i18n="keyHelp">انسخ قيمة MIJHAR_DEMO_CLIENT_KEY من ملف backend/.env، أو شغّل «uv run mijhar agent» ليفتح الرابط بالمفاتيح تلقائياً. المفتاح يبقى في ذاكرة الصفحة فقط.</p>
+        <label><span data-i18n="clientKey">مفتاح العميل</span><input id="ckInput" type="password" autocomplete="off" required></label>
+        <button class="primary" type="submit" data-i18n="connect">اتصال</button>
+      </form>
+
+      <div class="composer-wrap">
+        <div id="attached" class="attached" aria-live="polite"></div>
+        <form id="composer" class="composer">
+          <div class="tools-row">
+            <label class="ghost file-btn"><input id="file" type="file" accept=".txt,.md,text/plain,text/markdown"><span data-i18n="attach">إرفاق ملف</span></label>
+            <select id="sample" aria-label="Sample document"><option value="" data-i18n="sample">مستند تجريبي…</option></select>
+          </div>
+          <div class="input-row">
+            <textarea id="msg" rows="1" maxlength="200000" data-i18n-ph="placeholder" placeholder="اكتب طلبك… مثال: دقّق المستند"></textarea>
+            <button id="send" class="primary send" type="submit" data-i18n="send">إرسال</button>
+          </div>
+          <div class="chips" id="chips"></div>
+        </form>
+      </div>
+    </section>
+
+    <aside id="case" class="case" aria-label="Case file">
+      <div class="case-head">
+        <h2 data-i18n="caseFile">ملف القضية</h2>
+        <button id="caseClose" class="ghost case-toggle" type="button" data-i18n="close">إغلاق</button>
+      </div>
+      <section>
+        <h3 data-i18n="docs">المستندات</h3>
+        <ul id="docs" class="docs"><li class="muted" data-i18n="noDocs">لا يوجد مستند بعد</li></ul>
+      </section>
+      <section>
+        <h3 data-i18n="context">سياق النموذج</h3>
+        <div class="meter"><div id="ctxBar"></div></div>
+        <p id="ctxText" class="small muted">—</p>
+        <dl id="usage" class="usage"></dl>
+      </section>
+      <section>
+        <h3 data-i18n="tools">الأدوات المسموحة</h3>
+        <ul id="toolList" class="toollist"></ul>
+      </section>
+      <section>
+        <h3 data-i18n="prefs">تفضيلاتي (ذاكرة)</h3>
+        <label class="row"><span data-i18n="prefLang">لغة الرد</span>
+          <select id="prefLang"><option value="auto" data-i18n="auto">تلقائي</option><option value="ar">العربية</option><option value="en">English</option></select></label>
+        <label class="row"><span data-i18n="prefDetail">التفصيل</span>
+          <select id="prefDetail"><option value="brief" data-i18n="brief">مختصر</option><option value="detailed" data-i18n="detailed">مفصّل</option></select></label>
+        <p class="small muted" data-i18n="prefNote">يقرأها الوكيل في بداية كل طلب، ولا يستطيع تعديلها.</p>
+      </section>
+      <section>
+        <button id="newSession" class="ghost wide" type="button" data-i18n="newSession">جلسة جديدة</button>
+      </section>
+    </aside>
+  </main>
+</div>
+<template id="tplApproval">
+  <article class="approval" tabindex="-1">
+    <header>
+      <div>
+        <h3 data-i18n="approvalTitle">طلب اعتماد بانتظار توقيعك</h3>
+        <p class="small muted"><span data-i18n="job">المهمة</span> <code class="job"></code> · <span data-i18n="hash">بصمة التقرير</span> <code class="hash"></code></p>
+      </div>
+      <div class="risk"><span class="risk-n"></span><span class="small" data-i18n="riskOf">من 100</span></div>
+    </header>
+    <div class="threats"></div>
+    <ol class="claims"></ol>
+    <form class="sign">
+      <label><span data-i18n="reviewer">معرّف المراجع</span><input name="rid" autocomplete="off" required></label>
+      <label><span data-i18n="reviewerKey">مفتاح المراجع</span><input name="rk" type="password" autocomplete="off" required></label>
+      <div class="sign-actions">
+        <button class="primary" value="approve" type="submit" data-i18n="approve">اعتماد ونشر الشهادة</button>
+        <button class="ghost" value="revise" type="submit" data-i18n="revise">طلب مراجعة</button>
+        <button class="danger" value="reject" type="submit" data-i18n="reject">رفض</button>
+      </div>
+      <p class="small muted" data-i18n="signNote">يُوقَّع القرار على الخادم بمفتاحك، ويُربط بهذه البصمة بالذات، ويُستخدم مرة واحدة.</p>
+      <p class="sign-error" role="alert"></p>
+    </form>
+  </article>
+</template>
+</body>
+</html>

@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mijhar"
+version = "1.0.0"
+description = "MIJHAR: evidence-audit agent as a LangGraph workflow with a signed human gate"
+requires-python = ">=3.11"
+dependencies = [
+  "mcp>=2.3",
+  "langgraph>=1.2",
+  "langgraph-checkpoint-sqlite>=3.1",
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "pydantic>=2.7",
+  "openai>=1.40",
+]
+
+[project.optional-dependencies]
+dense = ["model2vec>=0.3"]
+pdf = ["pypdf>=4"]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+mijhar = "mijhar.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mijhar"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"mijhar/data" = "mijhar/data"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

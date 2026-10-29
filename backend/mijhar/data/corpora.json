@@ -1,0 +1,191 @@
+{
+ "_notice": "SYNTHETIC BENCHMARK CORPORA. Passages are invented paraphrases written for this capstone; they are NOT official text of any Saudi regulation and the figures are fictional. Do not cite them as law.",
+ "corpora": {
+  "ai_ethics": {
+   "name_en": "AI Ethics (synthetic)",
+   "name_ar": "أخلاقيات الذكاء الاصطناعي (اصطناعي)",
+   "passages": [
+    {
+     "id": "AIE-01",
+     "corpus": "ai_ethics",
+     "title_en": "Human oversight",
+     "title_ar": "الإشراف البشري",
+     "text_en": "Automated decisions with significant impact on individuals must keep an effective human review and appeal path. Full automation without human appeal is not permitted.",
+     "text_ar": "يجب أن تحتفظ القرارات الآلية ذات الأثر الكبير على الأفراد بمسار فعّال للمراجعة والاستئناف البشري. لا يجوز الاعتماد الكامل على الأتمتة دون استئناف بشري."
+    },
+    {
+     "id": "AIE-02",
+     "corpus": "ai_ethics",
+     "title_en": "Transparency",
+     "title_ar": "الشفافية",
+     "text_en": "Individuals must be informed that they are interacting with an AI system before the interaction begins.",
+     "text_ar": "يجب إبلاغ الأفراد بأنهم يتعاملون مع نظام ذكاء اصطناعي قبل بدء التفاعل."
+    },
+    {
+     "id": "AIE-03",
+     "corpus": "ai_ethics",
+     "title_en": "Accountability",
+     "title_ar": "المساءلة",
+     "text_en": "A named accountable owner must be designated for every AI system in production.",
+     "text_ar": "يجب تعيين مسؤول مسمّى عن كل نظام ذكاء اصطناعي قيد التشغيل."
+    },
+    {
+     "id": "AIE-04",
+     "corpus": "ai_ethics",
+     "title_en": "Fairness testing",
+     "title_ar": "اختبار العدالة",
+     "text_en": "Bias and fairness testing must be performed before deployment and repeated at least every 12 months.",
+     "text_ar": "يجب إجراء اختبار التحيز والعدالة قبل النشر وتكراره مرة كل 12 شهراً على الأقل."
+    },
+    {
+     "id": "AIE-05",
+     "corpus": "ai_ethics",
+     "title_en": "Privacy and data minimisation",
+     "title_ar": "الخصوصية وتقليل البيانات",
+     "text_en": "Personal data must be minimised, and secondary use requires fresh consent from the data subject.",
+     "text_ar": "يجب تقليل البيانات الشخصية، ويتطلب أي استخدام ثانوي موافقة جديدة من صاحب البيانات."
+    },
+    {
+     "id": "AIE-06",
+     "corpus": "ai_ethics",
+     "title_en": "Incident reporting",
+     "title_ar": "الإبلاغ عن الحوادث",
+     "text_en": "Serious AI incidents must be reported to the competent authority within 72 hours of discovery.",
+     "text_ar": "يجب الإبلاغ عن حوادث الذكاء الاصطناعي الجسيمة إلى الجهة المختصة خلال 72 ساعة من اكتشافها."
+    },
+    {
+     "id": "AIE-07",
+     "corpus": "ai_ethics",
+     "title_en": "Explainability",
+     "title_ar": "قابلية التفسير",
+     "text_en": "Decisions affecting individuals must be explainable on request, and an explanation must be provided within 30 days.",
+     "text_ar": "يجب أن تكون القرارات المؤثرة على الأفراد قابلة للتفسير عند الطلب، ويجب تقديم التفسير خلال 30 يوماً."
+    }
+   ]
+  },
+  "cloud_sovereignty": {
+   "name_en": "Cloud and Data Sovereignty (synthetic)",
+   "name_ar": "السحابة وسيادة البيانات (اصطناعي)",
+   "passages": [
+    {
+     "id": "CSV-01",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Residency of restricted data",
+     "title_ar": "موطن البيانات المقيّدة",
+     "text_en": "Personal data of citizens classified as restricted must be stored in data centres located inside the Kingdom.",
+     "text_ar": "يجب تخزين البيانات الشخصية للمواطنين المصنّفة مقيّدة في مراكز بيانات داخل المملكة."
+    },
+    {
+     "id": "CSV-02",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Cross-border transfer",
+     "title_ar": "النقل عبر الحدود",
+     "text_en": "Cross-border transfer of public-sector data is prohibited unless the competent authority approves it in writing.",
+     "text_ar": "يُحظر نقل بيانات القطاع العام خارج المملكة ما لم توافق الجهة المختصة كتابياً."
+    },
+    {
+     "id": "CSV-03",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Encryption",
+     "title_ar": "التشفير",
+     "text_en": "Restricted data must be encrypted at rest with AES-256 and customer-managed keys.",
+     "text_ar": "يجب تشفير البيانات المقيّدة أثناء التخزين باستخدام AES-256 ومفاتيح يديرها العميل."
+    },
+    {
+     "id": "CSV-04",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Audit logs",
+     "title_ar": "سجلات التدقيق",
+     "text_en": "Cloud providers must retain audit logs for at least 12 months.",
+     "text_ar": "يجب على مزودي الخدمة السحابية الاحتفاظ بسجلات التدقيق لمدة 12 شهراً على الأقل."
+    },
+    {
+     "id": "CSV-05",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Backups",
+     "title_ar": "النسخ الاحتياطية",
+     "text_en": "Backups of restricted data must also remain inside the Kingdom.",
+     "text_ar": "يجب أن تبقى النسخ الاحتياطية للبيانات المقيّدة داخل المملكة أيضاً."
+    },
+    {
+     "id": "CSV-06",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Incident notification",
+     "title_ar": "الإشعار بالحوادث",
+     "text_en": "A security incident affecting public-sector cloud workloads must be notified within 24 hours.",
+     "text_ar": "يجب الإشعار بالحادث الأمني الذي يمس أحمال القطاع العام السحابية خلال 24 ساعة."
+    },
+    {
+     "id": "CSV-07",
+     "corpus": "cloud_sovereignty",
+     "title_en": "Exit and portability",
+     "title_ar": "الخروج وقابلية النقل",
+     "text_en": "On termination the provider must export customer data in open formats within 30 days.",
+     "text_ar": "عند إنهاء العقد يجب على المزود تصدير بيانات العميل بصيغ مفتوحة خلال 30 يوماً."
+    }
+   ]
+  },
+  "govtech_procurement": {
+   "name_en": "GovTech Procurement (synthetic)",
+   "name_ar": "المشتريات الحكومية التقنية (اصطناعي)",
+   "passages": [
+    {
+     "id": "GTP-01",
+     "corpus": "govtech_procurement",
+     "title_en": "Competitive tendering",
+     "title_ar": "المنافسة العامة",
+     "text_en": "Contracts above SAR 1,000,000 must be competitively tendered with at least 3 bidders.",
+     "text_ar": "يجب طرح العقود التي تتجاوز 1,000,000 ريال في منافسة عامة بثلاثة متنافسين على الأقل."
+    },
+    {
+     "id": "GTP-02",
+     "corpus": "govtech_procurement",
+     "title_en": "Direct award",
+     "title_ar": "الشراء المباشر",
+     "text_en": "Direct award is limited to SAR 100,000 and, in emergencies, requires a written justification.",
+     "text_ar": "يقتصر الشراء المباشر على 100,000 ريال، ويتطلب في الحالات الطارئة مبرراً مكتوباً."
+    },
+    {
+     "id": "GTP-03",
+     "corpus": "govtech_procurement",
+     "title_en": "Evaluation criteria",
+     "title_ar": "معايير التقييم",
+     "text_en": "Evaluation criteria and their weights must be published before bids are opened.",
+     "text_ar": "يجب نشر معايير التقييم وأوزانها قبل فتح العروض."
+    },
+    {
+     "id": "GTP-04",
+     "corpus": "govtech_procurement",
+     "title_en": "Conflict of interest",
+     "title_ar": "تعارض المصالح",
+     "text_en": "Every evaluator must sign a conflict-of-interest declaration before evaluation starts.",
+     "text_ar": "يجب على كل مقيّم توقيع إقرار تعارض مصالح قبل بدء التقييم."
+    },
+    {
+     "id": "GTP-05",
+     "corpus": "govtech_procurement",
+     "title_en": "AI component disclosure",
+     "title_ar": "الإفصاح عن مكونات الذكاء الاصطناعي",
+     "text_en": "Vendors must disclose AI components and subcontractors in their bids.",
+     "text_ar": "يجب على المورّدين الإفصاح عن مكونات الذكاء الاصطناعي والمتعاقدين من الباطن في عروضهم."
+    },
+    {
+     "id": "GTP-06",
+     "corpus": "govtech_procurement",
+     "title_en": "Award publication and complaints",
+     "title_ar": "نشر الترسية والتظلم",
+     "text_en": "Award decisions must be published within 10 working days, followed by a 5 working day standstill period for complaints.",
+     "text_ar": "يجب نشر قرارات الترسية خلال 10 أيام عمل، تليها فترة توقف 5 أيام عمل للتظلمات."
+    },
+    {
+     "id": "GTP-07",
+     "corpus": "govtech_procurement",
+     "title_en": "Record retention",
+     "title_ar": "حفظ السجلات",
+     "text_en": "Procurement files must be retained for 10 years.",
+     "text_ar": "يجب حفظ ملفات المشتريات لمدة 10 سنوات."
+    }
+   ]
+  }
+ }
+}

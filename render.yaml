@@ -1,0 +1,21 @@
+# Render Blueprint. Secrets marked sync:false are typed in the Render dashboard, never committed.
+services:
+  - type: web
+    name: mijhar-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /healthz
+    disk:
+      name: mijhar-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: MIJHAR_SIGNING_SECRET
+        sync: false
+      - key: MIJHAR_REVIEWERS
+        sync: false
+      - key: MIJHAR_CLIENT_KEYS
+        sync: false
+      - key: MIJHAR_CORS_ORIGINS
+        sync: false

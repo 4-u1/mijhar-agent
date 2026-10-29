@@ -1,0 +1,6 @@
+{
+  "name": "مِجهر | MIJHAR — Autonomous Evidence Audit Agent",
+  "description": "نظام وكيل ذكي هندسي لتدقيق المستندات والتحقق من الادعاءات والمراجع واكتشاف التناقضات ومحاولات حقن الأوامر مع بوابة اعتماد بشرية صارمة متوافق مع متطلبات SDAIA Agentic AI Capstone.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

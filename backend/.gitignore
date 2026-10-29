@@ -1,0 +1,17 @@
+# secrets and local state
+.env
+.env.*
+!.env.example
+*.pem
+backend/runs/
+*.sqlite
+traces.jsonl
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+# node
+node_modules/
+dist/
