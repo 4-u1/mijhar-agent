@@ -165,6 +165,11 @@ def chat(doc: str | None, file: str | None, says: list[str], use_mcp: bool, offl
                 except ServiceError as e:
                     print(c("31", f"  refused: {e.message}"))
     finally:
+        m = svc.model
+        if m is not None:
+            print(f"model requests: {m.calls}  ok: {m.ok}  failed: {m.failed}  cache hits: {m.cache_hits}  "
+                  f"model that answered: {m.model_used or 'NONE'}" + (f"  last error: {m.last_error}" if m.last_error else "")
+                  + (f"  STOPPED: {m.dead}" if m.dead else ""))
         a.rt.toolbox.close()
     return 0
 

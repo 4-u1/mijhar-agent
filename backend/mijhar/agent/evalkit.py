@@ -120,7 +120,8 @@ def run(tasks_path: Path, configs: list[str], trials: int = 1, offline: bool = F
                     approval = any(e["type"] == "approval_required" for e in ev)
                     planner_end = next((e.get("planner") for e in reversed(ev) if e["type"] == "done"), "")
                     if not offline and planner_end == "offline" and not err:
-                        err = "model_unavailable: degraded to the offline planner"
+                        why = next((e["text"] for e in ev if e["type"] == "notice" and "unavailable" in e["text"].lower()), "")
+                        err = f"model_unavailable: {why or (model.dead if model else '')}"[:300]
                     grades = grade(t, final, tools, approval, _ledger_rows() - before)
                     passed = not err and all(g["pass"] for g in grades)
                     reqs = (model.calls if model else 0) + (aud.rt.llm.calls if aud.rt.llm else 0) - calls0

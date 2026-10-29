@@ -109,8 +109,9 @@ jobs:
         run: |
           uv run mijhar init-env --force --openrouter-key "$OPENROUTER_API_KEY" > /dev/null
           uv run mijhar ask "How fast must serious AI incidents be reported?" | tee ask.log
+          grep -E "^  ! |^model requests:" ask.log | cut -c1-400 | while read -r l; do echo "::warning title=ask diagnostics::$l"; done
           grep -q "planner=llm" ask.log
-          ! grep -q "Continuing with the offline planner" ask.log
+          ! grep -qi "offline planner" ask.log
           echo "::notice title=live ask::$(grep -m1 'planner=' ask.log) || $(grep -A3 '^agent>' ask.log | tr '\n' ' ' | cut -c1-300)"
       - name: Real agent session over MCP with the model
         run: |
