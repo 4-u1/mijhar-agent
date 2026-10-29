@@ -32,19 +32,29 @@ jobs:
       - name: Install (real dependencies from uv.lock)
         run: uv sync --extra dev --frozen
       - name: Unit and integration tests
-        run: uv run pytest -q
+        run: |
+          uv run pytest -q | tee pytest.log
+          echo "::notice title=pytest::$(tail -1 pytest.log)"
+          uv run python -c "import langgraph, fastapi, openai, mcp, importlib.metadata as m; print(*(f'{p}=={m.version(p)}' for p in ['langgraph','fastapi','openai','mcp']))" | xargs -I{} echo "::notice title=versions::{}"
       - name: Pipeline evals (33 tasks x 3, A vs B)
-        run: uv run python -m evals.run
+        run: |
+          uv run python -m evals.run | tee run.log
+          echo "::notice title=pipeline evals::$(grep '^| ALL' run.log)"
       - name: Ablation
-        run: uv run python -m evals.ablation
+        run: |
+          uv run python -m evals.ablation | tee abl.log
+          echo "::notice title=ablation::$(grep '^| ALL' abl.log)"
       - name: Agent harness evals (20 tasks x 3, A vs B)
-        run: uv run python -m evals.agent_run
+        run: |
+          uv run python -m evals.agent_run | tee agent.log
+          echo "::notice title=agent evals::$(grep '^| ALL' agent.log)"
       - name: Agent in the terminal over MCP (offline planner), signed approval
         run: |
           uv run mijhar init-env --force
           uv run mijhar chat --doc cloud_sovereignty_draft --say "audit the document" --say "approve" --yes | tee chat.log
           grep -q "tools_over_mcp=True" chat.log
           grep -q "status=committed" chat.log
+          echo "::notice title=chat over MCP::$(grep -m1 'planner=' chat.log) | $(grep -m1 'status=committed' chat.log | cut -c1-120)"
       - name: HTTP server smoke test (FastAPI + mounted agent)
         run: |
           uv run mijhar serve --port 8000 > serve.log 2>&1 &
@@ -60,6 +70,7 @@ jobs:
                -d '{"text":"audit the document"}' http://127.0.0.1:8000/agent/api/sessions/$SID/messages | tee sse.log | tail -3
           grep -q '"type": "done"' sse.log
           grep -q '"name": "audit_document"' sse.log
+          echo "::notice title=http smoke::$(cat health.json) | SSE events: $(grep -c '^data:' sse.log)"
       - name: Results
         if: always()
         run: |
@@ -96,14 +107,18 @@ jobs:
           uv run mijhar ask "How fast must serious AI incidents be reported?" | tee ask.log
           grep -q "planner=llm" ask.log
           ! grep -q "Continuing with the offline planner" ask.log
+          echo "::notice title=live ask::$(grep -m1 'planner=' ask.log) || $(grep -A3 '^agent>' ask.log | tr '\n' ' ' | cut -c1-300)"
       - name: Real agent session over MCP with the model
         run: |
           uv run mijhar chat --doc cloud_sovereignty_draft --say "Audit the attached document and list the contradicted claims with passage ids." --say "Request my approval to publish." --yes | tee live_chat.log
       - name: Live eval in the course format (A = no skills, B = skills)
         run: |
           LIMIT="${{ inputs.limit }}"; TRIALS="${{ inputs.trials }}"
-          MIJHAR_PIPELINE_LLM=0 uv run mijhar eval tasks.jsonl --config A B --trials "${TRIALS:-1}" ${LIMIT:+--limit $LIMIT}
+          MIJHAR_PIPELINE_LLM=0 uv run mijhar eval tasks.jsonl --config A B --trials "${TRIALS:-1}" ${LIMIT:+--limit $LIMIT} | tee eval.log
+          grep '^FAIL' eval.log | cut -c1-200 | while read -r l; do echo "::warning title=live eval failure::$l"; done
           cat evals/live/summary.md >> "$GITHUB_STEP_SUMMARY"
+          grep '^| [AB] |' evals/live/summary.md | while read -r l; do echo "::notice title=live eval::$l"; done
+          grep -E '^(Flipped|Regressed)' evals/live/summary.md | while read -r l; do echo "::notice title=live eval::$l"; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:

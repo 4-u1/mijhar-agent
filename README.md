@@ -1,36 +1,29 @@
 <div align="center">
 
-<img src="backend/mijhar/data/agent/web/icon.svg" width="88" alt="MIJHAR logo">
+<img src="docs/assets/banner.png" alt="MIJHAR مِجهر: evidence-audit agent with a signed human gate" width="100%">
 
-# مِجهر · MIJHAR
+<br>
+
+[![CI](https://github.com/4-u1/mijhar-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/4-u1/mijhar-agent/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-human%20gate-1C3C3C)
+![MCP](https://img.shields.io/badge/MCP-stdio%20%C2%B7%203%20tools-6366F1)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-gemma--4--31b--it%3Afree-6467F2)
+![FastAPI](https://img.shields.io/badge/FastAPI-SSE-009688?logo=fastapi&logoColor=white)
+![uv](https://img.shields.io/badge/run%20with-uv-DE5FE9)
+<br>
+![Pipeline evals](https://img.shields.io/badge/pipeline%20evals-A%2073%25%20%E2%86%92%20B%20100%25-2EA043)
+![Agent evals](https://img.shields.io/badge/agent%20evals-A%2070%25%20%E2%86%92%20B%20100%25-2EA043)
+![Write path](https://img.shields.io/badge/write%20path-human%20signature%20only-B4382F)
+![Languages](https://img.shields.io/badge/UI-Arabic%20%2B%20English-8B5CF6)
+![PDPL](https://img.shields.io/badge/PDPL-offline%20by%20default-0F6E5A)
 
 ### وكيل ذكاء اصطناعي لتدقيق المستندات والأدلة، بقرار بشري موقَّع وحوكمة مفروضة في الكود
 ### An evidence-audit **agent** that drives a governed LangGraph pipeline, with a signed human decision before any write
 
-<br>
-
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
-![Agent](https://img.shields.io/badge/Agent-tool--calling%20loop-0F6E5A)
-![LangGraph](https://img.shields.io/badge/LangGraph-StateGraph%20%2B%20interrupt-1C3C3C)
-![MCP](https://img.shields.io/badge/MCP-SDK%20v2%20%C2%B7%20stdio-6366F1)
-![OpenRouter](https://img.shields.io/badge/OpenRouter-free%20models-6467F2)
-![FastAPI](https://img.shields.io/badge/FastAPI-HTTP%20%2B%20SSE-009688?logo=fastapi&logoColor=white)
-![uv](https://img.shields.io/badge/run%20with-uv-DE5FE9)
-<br>
-![Tests](https://img.shields.io/badge/tests-73%20passing-2EA043)
-![Pipeline evals](https://img.shields.io/badge/pipeline%20evals-33%20tasks%20%C2%B7%20A%2073%25%20%E2%86%92%20B%20100%25-2EA043)
-![Agent evals](https://img.shields.io/badge/agent%20evals-20%20tasks%20%C2%B7%20A%2070%25%20%E2%86%92%20B%20100%25-2EA043)
-![Security](https://img.shields.io/badge/write%20path-human%20signature%20only-B4382F)
-![Bilingual](https://img.shields.io/badge/%D8%B9%D8%B1%D8%A8%D9%8A%20%C2%B7%20English-RTL%20%2F%20LTR-8B5CF6)
-![PDPL](https://img.shields.io/badge/PDPL-offline%20by%20default-0F6E5A)
-
-<br>
-
-**SDAIA Academy · Agentic AI Systems Engineering · Capstone**
-**Track 3 · Graph workflow** (durable human-in-the-loop graph) **+ a tool-using agent in front of it**
+**SDAIA Academy · Agentic AI Systems Engineering · Capstone**<br>
+**Track 3 · Graph workflow** + a tool-using agent in front of it<br>
 **Author:** Yazeed Hamad Alharthi · يزيد حمد الحارثي
-
-<br>
 
 [الفكرة](#-الفكرة--the-idea) ·
 [Quickstart](#-quickstart) ·
@@ -491,13 +484,17 @@ Three **synthetic** bilingual corpora, 21 passages, in `backend/mijhar/data/corp
 
 ## 🧭 What runs where (verification status)
 
-| Part | Status |
+Every push runs [**CI**](https://github.com/4-u1/mijhar-agent/actions/workflows/ci.yml) on GitHub's runners with the **real** dependencies from `uv.lock` (LangGraph, FastAPI, OpenAI SDK, MCP SDK):
+
+| Check | How it is verified |
 |---|---|
-| Guard, signing, MCP over a live stdio session, LLM client (fakes), embeddings, contract tests | ✅ run directly |
-| Graph, pipeline evals (byte-identical to the recorded results), ablation, agent tests, agent evals, CLI chat, web app in Chromium | ✅ run with a local stand-in for LangGraph (the review machine could not install packages); re-run with the real one: `uv run pytest` |
-| FastAPI layer (`tests/test_api.py`) and the agent mounted inside it | 🟢 reviewed, not executed in the review environment |
-| Real OpenRouter calls (agent and pipeline) | 🟡 request shape tested against fakes of the OpenAI SDK; run `mijhar ask` and `mijhar eval` with your key |
-| React app (`frontend/`) | 🟡 optional; most tabs show synthetic data |
+| All unit and integration tests, including the FastAPI layer and the real LangGraph graph | `uv run pytest` in CI |
+| Pipeline evals, ablation, agent harness evals | `evals.run`, `evals.ablation`, `evals.agent_run` in CI |
+| The agent over a live stdio MCP session, ending in a signed `COMMITTED` write | `mijhar chat --doc cloud_sovereignty_draft … --yes` in CI |
+| The HTTP server with the agent mounted: health, ledger chain, web page, a streamed (SSE) audit | `mijhar serve` + `curl` in CI |
+| The web app in a real browser (Arabic and English, 1280 px and 390 px) | Chromium via Playwright, during development |
+| **The agent with a real OpenRouter model**, plus the course-format A/B eval with CSVs | CI job `live`: add the `OPENROUTER_API_KEY` repository secret, then **Actions → CI → Run workflow** |
+| React app (`frontend/`) | optional, not in CI; most tabs show synthetic data |
 
 ---
 
