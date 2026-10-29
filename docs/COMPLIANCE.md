@@ -56,7 +56,7 @@ Source of requirements: the Day 5 scoring guide and final-prep checklist (SDAIA 
 | README run with `uv run` and a key | Quickstart | 🟢 |
 | Eval tables in README | pipeline, ablation, agent | ✅ |
 | 8-minute plan + Q&A | `docs/PRESENTATION.md` | ✅ |
-| Slides | `docs/slides/index.html` (65 slides) · EN and AR PDFs | ✅ |
+| Slides | `docs/slides/index.html` (65 slides) · https://4-u1.github.io/mijhar-agent/slides/ | ✅ |
 | Eval CSVs for both configurations (submission item) | `mijhar eval` → `evals/live/eval_A.csv`, `eval_B.csv`; offline-planner CSVs in `evals/offline_planner/` | 🟡 run live |
 | README from the course template | all template sections (track, team, model, problem, how to run, ladder, tools with trifecta leg, evaluation, error analysis, security note, limitations) | ✅ |
 | Slides, backup recording, clean-clone test, warm-up run | — | ⬜ |
