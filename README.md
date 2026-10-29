@@ -17,6 +17,10 @@
 ![Write path](https://img.shields.io/badge/write%20path-human%20signature%20only-B4382F)
 ![Languages](https://img.shields.io/badge/UI-Arabic%20%2B%20English-8B5CF6)
 ![PDPL](https://img.shields.io/badge/PDPL-offline%20by%20default-0F6E5A)
+<br>
+[![Slides](https://img.shields.io/badge/%F0%9F%8E%9E%20Slides-open%20the%2065--slide%20deck-F2B04A?labelColor=1C3157)](https://raw.githack.com/4-u1/mijhar-agent/main/docs/slides/index.html)
+[![PDF EN](https://img.shields.io/badge/PDF-English-1C3157)](docs/slides/MIJHAR-Capstone-EN.pdf)
+[![PDF AR](https://img.shields.io/badge/PDF-%D8%B9%D8%B1%D8%A8%D9%8A-0E9F7E)](docs/slides/MIJHAR-Capstone-AR.pdf)
 
 ### وكيل ذكاء اصطناعي لتدقيق المستندات والأدلة، بقرار بشري موقَّع وحوكمة مفروضة في الكود
 ### An evidence-audit **agent** that drives a governed LangGraph pipeline, with a signed human decision before any write
@@ -505,11 +509,11 @@ Every push runs [**CI**](https://github.com/4-u1/mijhar-agent/actions/workflows/
 
 | | File | What it is |
 |---|---|---|
-| 🖥 | [`docs/slides/index.html`](docs/slides/index.html) | the full 65-slide deck in the course's slide format: ← → to move, **Contents** to jump, **Notes** for speaker notes |
+| 🖥 | **[Open the deck in the browser ↗](https://raw.githack.com/4-u1/mijhar-agent/main/docs/slides/index.html)** · source [`docs/slides/index.html`](docs/slides/index.html) | the full 65-slide deck in the course's slide format: ← → to move, **Contents** to jump, **Notes** for speaker notes |
 | 📄 | [`docs/slides/MIJHAR-Capstone-EN.pdf`](docs/slides/MIJHAR-Capstone-EN.pdf) | the 25-slide talk in English (Day 5 structure) |
 | 📄 | [`docs/slides/MIJHAR-Capstone-AR.pdf`](docs/slides/MIJHAR-Capstone-AR.pdf) | the same talk in Arabic, right to left |
 
-Open the HTML deck locally (`open docs/slides/index.html`) or, with GitHub Pages enabled on `main` → `/docs`, at `https://4-u1.github.io/mijhar-agent/slides/`.
+GitHub shows `.html` files as source, so the browser link above serves the same file from this repository. With GitHub Pages enabled on `main` → `/docs`, the deck is also at `https://4-u1.github.io/mijhar-agent/slides/`.
 
 ---
 
