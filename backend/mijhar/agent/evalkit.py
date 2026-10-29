@@ -38,8 +38,13 @@ def load_tasks(path: Path, ids: list[str] | None = None, limit: int | None = Non
     return tasks[:limit] if limit else tasks
 
 
+_DASHES = str.maketrans({c: "-" for c in "\u2010\u2011\u2012\u2013\u2014\u2212\ufe63\uff0d"})
+
+
 def _n(s: str) -> str:
-    return (s or "").translate(ARABIC_DIGITS).lower()
+    """Course semantics (case-insensitive, Arabic digits folded) plus Unicode dashes folded to '-':
+    models often write passage ids with a non-breaking hyphen (AIE\u201106), which is the same id."""
+    return (s or "").translate(ARABIC_DIGITS).translate(_DASHES).lower()
 
 
 def grade(task: dict, final: str, tools: list[str], approval: bool, ledger_delta: int) -> list[dict]:

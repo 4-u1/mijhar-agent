@@ -121,6 +121,14 @@ jobs:
           LIMIT="${{ inputs.limit }}"; TRIALS="${{ inputs.trials }}"
           MIJHAR_PIPELINE_LLM=0 uv run mijhar eval tasks.jsonl --config A B --trials "${TRIALS:-1}" ${LIMIT:+--limit $LIMIT} | tee eval.log
           grep '^FAIL' eval.log | cut -c1-200 | while read -r l; do echo "::warning title=live eval failure::$l"; done
+          python - <<'PY'
+          import csv, glob
+          for f in sorted(glob.glob("evals/live/eval_*.csv")):
+              for r in csv.DictReader(open(f, encoding="utf-8")):
+                  if r["passed"] != "True":
+                      txt = r["final"].replace("\n", " ")[:300]
+                      print(f"::warning title=failed answer {r['config']} {r['id']}::tools=[{r['tools']}] requests={r['requests']} :: {txt}")
+          PY
           if grep -q "model_unavailable" eval.log; then echo "::error title=live eval::the model was unavailable for some tasks; results are not a model eval"; exit 1; fi
           cat evals/live/summary.md >> "$GITHUB_STEP_SUMMARY"
           grep '^| [AB] |' evals/live/summary.md | while read -r l; do echo "::notice title=live eval::$l"; done
