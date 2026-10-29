@@ -138,8 +138,8 @@ export default function App() {
             <span>·</span>
             <span>
               {language === 'ar' 
-                ? 'مشروع تخرج برنامج هندسة نظم الوكلاء الذكية (SDAIA Agentic AI Systems Engineering Capstone)'
-                : 'SDAIA Academy Agentic AI Systems Engineering Capstone Project'}
+                ? 'مشروع تخرج برنامج هندسة أنظمة الذكاء الاصطناعي التوكيلي المتقدمة (SDAIA Advanced Agentic AI Systems Engineering Capstone)'
+                : 'SDAIA Academy Advanced Agentic AI Systems Engineering Capstone Project'}
             </span>
           </div>
 

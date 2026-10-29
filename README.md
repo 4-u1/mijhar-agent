@@ -23,7 +23,7 @@
 ### وكيل ذكاء اصطناعي لتدقيق المستندات والأدلة، بقرار بشري موقَّع وحوكمة مفروضة في الكود
 ### An evidence-audit **agent** that drives a governed LangGraph pipeline, with a signed human decision before any write
 
-**SDAIA Academy · Agentic AI Systems Engineering · Capstone**<br>
+**SDAIA Academy · Advanced Agentic AI Systems Engineering · Capstone**<br>
 **Track 3 · Graph workflow** + a tool-using agent in front of it<br>
 **Author:** Yazeed Hamad Alharthi · يزيد حمد الحارثي
 
@@ -573,7 +573,7 @@ Or create a Space (SDK: **Docker**) and drag the files of `dist/space/` into its
 
 **Yazeed Hamad Alharthi · يزيد حمد الحارثي**
 Lead engineer: design, implementation, evaluation and security of the agent, the pipeline and the web app.
-Program: SDAIA Academy, Agentic AI Systems Engineering (AI Engineering Track), capstone project.
+Program: SDAIA Academy, Advanced Agentic AI Systems Engineering (AI Engineering Track), capstone project.
 
 ---
 

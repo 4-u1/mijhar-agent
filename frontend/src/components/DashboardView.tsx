@@ -46,7 +46,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div>
             <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-2">
               <span className="inline-block w-2 h-2 rounded-sm bg-cyan-400"></span>
-              <span>SDAIA AGENTIC AI SYSTEMS ENGINEERING · CAPSTONE PROJECT</span>
+              <span>SDAIA ADVANCED AGENTIC AI SYSTEMS ENGINEERING · CAPSTONE PROJECT</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               {isAr ? 'منظومة مِجهر للتدقيق المستقل للأدلة والامتثال' : 'MIJHAR Autonomous Evidence & Compliance Audit System'}

@@ -1,6 +1,6 @@
 # Capstone compliance matrix
 
-Source of requirements: the Day 5 scoring guide and final-prep checklist (SDAIA Academy, Agentic AI Systems Engineering). Status: ✅ verified by running it · 🟢 verified by reading/static checks only · 🟡 partly met · ⬜ outside the repository.
+Source of requirements: the Day 5 scoring guide and final-prep checklist (SDAIA Academy, Advanced Agentic AI Systems Engineering). Status: ✅ verified by running it · 🟢 verified by reading/static checks only · 🟡 partly met · ⬜ outside the repository.
 
 **How this was checked (2026-10-29 review).** The review machine could not install `langgraph`, `fastapi`, `openai` or `httpx` (package index blocked) and had no OpenRouter access. So:
 - Run for real: 44 pipeline tests that need none of those (guard, signing, MCP over a live stdio session, LLM client with fakes, embeddings, AGENTS.md sync).

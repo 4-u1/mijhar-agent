@@ -12,7 +12,7 @@ short_description: Evidence-audit AI agent with MCP tools and a signed human gat
 # مِجهر · MIJHAR
 
 An evidence-audit agent that drives a governed LangGraph pipeline, with a signed human decision before any write.
-SDAIA Academy · Agentic AI Systems Engineering capstone · **Yazeed Hamad Alharthi · يزيد حمد الحارثي**.
+SDAIA Academy · Advanced Agentic AI Systems Engineering capstone · **Yazeed Hamad Alharthi · يزيد حمد الحارثي**.
 
 Open the app at `/agent/`. It asks for a client key: set the Space secrets below, then open
 `https://<your-space>.hf.space/agent/#ck=<client key>&rid=<reviewer id>&rk=<reviewer key>` (the fragment never reaches the server).
