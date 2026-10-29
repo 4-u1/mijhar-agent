@@ -37,7 +37,8 @@
 [PRD](#-product-requirements-document-prd) ·
 [Course compliance](#-course-requirements-compliance) ·
 [OpenRouter](#-running-with-a-real-model-openrouter) ·
-[Limits](#-limitations-and-next-steps)
+[Limits](#-limitations-and-next-steps) ·
+[Slides](#-slides)
 
 </div>
 
@@ -421,7 +422,7 @@ Source: the course site and `labs/capstone/README.md` of [SDAIAAcademy/agentic-a
 | 3 · human approval for at least one write, step and cost budgets | signed approval for the only write; call, tool, time, token and request budgets | ✅ |
 | 4 · ≥ 15 eval tasks with automatic graders, two configurations, error analysis | 33 + 20 offline tasks and 18 course-format tasks; A/B everywhere; `ERROR_ANALYSIS.md` | ✅ offline · 🟡 live CSVs need your key |
 | 5 · a security note: trifecta, one attack, the defence | `SECURITY.md` §1–6 and this README | ✅ |
-| Submission: README from the template, code, `tasks.jsonl`, eval CSVs for both configs, slides; runs with `uv sync` / `uv run` and an OpenRouter key | template sections all present here; `tasks.jsonl`; `mijhar eval` writes the CSVs | 🟡 run the live eval · ⬜ slides |
+| Submission: README from the template, code, `tasks.jsonl`, eval CSVs for both configs, slides; runs with `uv sync` / `uv run` and an OpenRouter key | template sections all present here; `tasks.jsonl`; `mijhar eval` writes the CSVs | 🟡 run the live eval · ✅ slides in `docs/slides/` |
 
 ---
 
@@ -500,11 +501,24 @@ Every push runs [**CI**](https://github.com/4-u1/mijhar-agent/actions/workflows/
 
 ---
 
+## 🎞 Slides
+
+| | File | What it is |
+|---|---|---|
+| 🖥 | [`docs/slides/index.html`](docs/slides/index.html) | the full 65-slide deck in the course's slide format: ← → to move, **Contents** to jump, **Notes** for speaker notes |
+| 📄 | [`docs/slides/MIJHAR-Capstone-EN.pdf`](docs/slides/MIJHAR-Capstone-EN.pdf) | the 25-slide talk in English (Day 5 structure) |
+| 📄 | [`docs/slides/MIJHAR-Capstone-AR.pdf`](docs/slides/MIJHAR-Capstone-AR.pdf) | the same talk in Arabic, right to left |
+
+Open the HTML deck locally (`open docs/slides/index.html`) or, with GitHub Pages enabled on `main` → `/docs`, at `https://4-u1.github.io/mijhar-agent/slides/`.
+
+---
+
 ## 🧱 Project layout
 
 ```
 README.md  AGENTS.md  PRD.md  SECURITY.md
 docs/        PRESENTATION.md · COMPLIANCE.md
+  slides/                     index.html (65-slide deck) · MIJHAR-Capstone-EN.pdf · MIJHAR-Capstone-AR.pdf · img/
 backend/
   tasks.jsonl                 course-format agent eval (18 tasks)
   mijhar/                     guard · signing · budget · retrieval · reasoning · llm · cache · tools · toolbox
