@@ -29,6 +29,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false   # the post-run cache prune failed once with exit 2; caching is not needed here
       - name: Install (real dependencies from uv.lock)
         run: uv sync --extra dev --frozen
       - name: Unit and integration tests
@@ -98,6 +100,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false   # the post-run cache prune failed once with exit 2; caching is not needed here
       - run: uv sync --extra dev --frozen
       - name: Check the key
         run: test -n "$OPENROUTER_API_KEY" || { echo "Add the OPENROUTER_API_KEY repository secret"; exit 1; }

@@ -90,7 +90,7 @@ uv run mijhar eval tasks.jsonl --config A B           # live agent eval with you
 Checks and offline evals (no key, no network, deterministic):
 
 ```bash
-uv run pytest                                         # 73 tests
+uv run pytest                                         # 82 tests
 uv run python -m evals.run                            # pipeline: 33 tasks x 3 trials, config A vs B
 uv run python -m evals.ablation                       # which change explains A -> B
 uv run python -m evals.holdout                        # 10 held-out attacks
