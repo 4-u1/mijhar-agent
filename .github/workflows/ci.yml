@@ -111,7 +111,7 @@ jobs:
           uv run mijhar ask "How fast must serious AI incidents be reported?" | tee ask.log
           grep -E "^  ! |^model requests:" ask.log | cut -c1-400 | while read -r l; do echo "::warning title=ask diagnostics::$l"; done
           grep -q "planner=llm" ask.log
-          ! grep -qi "offline planner" ask.log
+          if grep -qi "offline planner" ask.log; then echo "::error title=live ask::the model did not answer (see diagnostics)"; exit 1; fi
           echo "::notice title=live ask::$(grep -m1 'planner=' ask.log) || $(grep -A3 '^agent>' ask.log | tr '\n' ' ' | cut -c1-300)"
       - name: Real agent session over MCP with the model
         run: |
@@ -121,6 +121,7 @@ jobs:
           LIMIT="${{ inputs.limit }}"; TRIALS="${{ inputs.trials }}"
           MIJHAR_PIPELINE_LLM=0 uv run mijhar eval tasks.jsonl --config A B --trials "${TRIALS:-1}" ${LIMIT:+--limit $LIMIT} | tee eval.log
           grep '^FAIL' eval.log | cut -c1-200 | while read -r l; do echo "::warning title=live eval failure::$l"; done
+          if grep -q "model_unavailable" eval.log; then echo "::error title=live eval::the model was unavailable for some tasks; results are not a model eval"; exit 1; fi
           cat evals/live/summary.md >> "$GITHUB_STEP_SUMMARY"
           grep '^| [AB] |' evals/live/summary.md | while read -r l; do echo "::notice title=live eval::$l"; done
           grep -E '^(Flipped|Regressed)' evals/live/summary.md | while read -r l; do echo "::notice title=live eval::$l"; done
