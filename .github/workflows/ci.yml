@@ -1,0 +1,115 @@
+# Real verification on GitHub's runners: real LangGraph, FastAPI, OpenAI SDK and MCP from PyPI.
+#   verify : tests, all offline eval suites, CLI agent over MCP, HTTP server smoke test. Runs on every push.
+#   live   : the agent with a REAL OpenRouter model (needs the OPENROUTER_API_KEY repository secret).
+#            Runs from Actions -> CI -> Run workflow. Results are uploaded as the "live-eval" artifact.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      live:
+        description: "Run the live agent eval with OpenRouter"
+        type: boolean
+        default: true
+      limit:
+        description: "Tasks per config (empty = all 18; the free tier allows ~50 requests a day)"
+        default: "6"
+      trials:
+        description: "Trials per task (3 gives pass^3)"
+        default: "1"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install (real dependencies from uv.lock)
+        run: uv sync --extra dev --frozen
+      - name: Unit and integration tests
+        run: uv run pytest -q
+      - name: Pipeline evals (33 tasks x 3, A vs B)
+        run: uv run python -m evals.run
+      - name: Ablation
+        run: uv run python -m evals.ablation
+      - name: Agent harness evals (20 tasks x 3, A vs B)
+        run: uv run python -m evals.agent_run
+      - name: Agent in the terminal over MCP (offline planner), signed approval
+        run: |
+          uv run mijhar init-env --force
+          uv run mijhar chat --doc cloud_sovereignty_draft --say "audit the document" --say "approve" --yes | tee chat.log
+          grep -q "tools_over_mcp=True" chat.log
+          grep -q "status=committed" chat.log
+      - name: HTTP server smoke test (FastAPI + mounted agent)
+        run: |
+          uv run mijhar serve --port 8000 > serve.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8000/healthz && break; sleep 1; done
+          curl -sf http://127.0.0.1:8000/healthz | tee health.json
+          grep -q '"ledger_chain_valid":true' health.json
+          curl -sf -o /dev/null http://127.0.0.1:8000/agent/
+          curl -sf http://127.0.0.1:8000/agent/api/capabilities
+          CK=$(grep '^MIJHAR_DEMO_CLIENT_KEY=' .env | cut -d= -f2)
+          SID=$(curl -sf -X POST -H "X-API-Key: $CK" http://127.0.0.1:8000/agent/api/sessions | python -c "import sys,json;print(json.load(sys.stdin)['session_id'])")
+          curl -sf -X POST -H "X-API-Key: $CK" -H "Content-Type: application/json" -d '{"sample":"ai_ethics_draft"}' http://127.0.0.1:8000/agent/api/sessions/$SID/documents
+          curl -sf -N -X POST -H "X-API-Key: $CK" -H "Content-Type: application/json" -H "Accept: text/event-stream" \
+               -d '{"text":"audit the document"}' http://127.0.0.1:8000/agent/api/sessions/$SID/messages | tee sse.log | tail -3
+          grep -q '"type": "done"' sse.log
+          grep -q '"name": "audit_document"' sse.log
+      - name: Results
+        if: always()
+        run: |
+          cat evals/results.md evals/agent_results.md >> "$GITHUB_STEP_SUMMARY" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-evals
+          path: |
+            backend/evals/*.md
+            backend/evals/*.json
+            backend/chat.log
+            backend/sse.log
+            backend/serve.log
+
+  live:
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && inputs.live
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --extra dev --frozen
+      - name: Check the key
+        run: test -n "$OPENROUTER_API_KEY" || { echo "Add the OPENROUTER_API_KEY repository secret"; exit 1; }
+      - name: One real request (must use the language model, not the offline planner)
+        run: |
+          uv run mijhar init-env --force --openrouter-key "$OPENROUTER_API_KEY" > /dev/null
+          uv run mijhar ask "How fast must serious AI incidents be reported?" | tee ask.log
+          grep -q "planner=llm" ask.log
+          ! grep -q "Continuing with the offline planner" ask.log
+      - name: Real agent session over MCP with the model
+        run: |
+          uv run mijhar chat --doc cloud_sovereignty_draft --say "Audit the attached document and list the contradicted claims with passage ids." --say "Request my approval to publish." --yes | tee live_chat.log
+      - name: Live eval in the course format (A = no skills, B = skills)
+        run: |
+          LIMIT="${{ inputs.limit }}"; TRIALS="${{ inputs.trials }}"
+          MIJHAR_PIPELINE_LLM=0 uv run mijhar eval tasks.jsonl --config A B --trials "${TRIALS:-1}" ${LIMIT:+--limit $LIMIT}
+          cat evals/live/summary.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-eval
+          path: |
+            backend/evals/live/*.csv
+            backend/evals/live/summary.md
+            backend/ask.log
+            backend/live_chat.log
