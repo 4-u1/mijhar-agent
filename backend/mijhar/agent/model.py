@@ -159,6 +159,10 @@ class ChatModel:
                     if code in (401, 403):
                         self.dead = f"authentication failed (HTTP {code})"
                         raise ModelUnavailable(self.dead) from e
+                    if code == 429 and re.search(r"per-day|per day|daily", str(e), re.I):
+                        # the DAILY free quota is gone: retrying or switching free models only burns requests
+                        self.dead = "daily free-model quota used up (OpenRouter 429); add credits or wait until tomorrow"
+                        raise ModelUnavailable(self.dead) from e
                     if protocol == "native" and code in (400, 404, 422) and re.search(r"tool|function", str(e), re.I):
                         raise ToolsUnsupported(self.last_error) from e
                     if code in (400, 422):

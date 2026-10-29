@@ -337,3 +337,10 @@ def test_course_format_eval_runs_offline_and_writes_csvs(env, tmp_path):
     summ = run_eval(tasks, ["A", "B"], 1, offline=True, use_mcp=False, ids=["rule-incidents-en", "chat-injection-en"], out_dir=tmp_path)
     assert (tmp_path / "eval_A.csv").exists() and (tmp_path / "eval_B.csv").exists() and (tmp_path / "summary.md").exists()
     assert summ["B"]["pass_rate"] == 1.0
+
+
+def test_daily_quota_429_stops_at_once(env):
+    svc, s, model = mk(env, [HTTPErr(429, "Rate limit exceeded: free-models-per-day")])
+    ev = run(svc, s, "incident deadline?")
+    assert len(model.client.calls) == 1 and "daily" in model.dead
+    assert any(e["type"] == "notice" and "offline planner" in e["text"] for e in ev)
