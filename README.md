@@ -430,7 +430,7 @@ Source: the course site and `labs/capstone/README.md` of [SDAIAAcademy/agentic-a
 ```bash
 uv run mijhar init-env --force --openrouter-key sk-or-v1-...   # sets OPENROUTER_API_KEY and MIJHAR_ALLOW_LIVE=1
 uv run mijhar ask "How fast must serious AI incidents be reported?"   # the header line must say planner=llm
-uv run mijhar eval tasks.jsonl --config A B --limit 5            # small first run on the free tier
+uv run mijhar eval tasks.jsonl --config A B --limit 8            # category-balanced subset that fits the 50-request free day
 ```
 
 | Variable | Default | Meaning |
@@ -444,6 +444,8 @@ uv run mijhar eval tasks.jsonl --config A B --limit 5            # small first r
 | `MIJHAR_CACHE` | `1` | replay identical requests from disk (run the demo once before presenting) |
 | `MIJHAR_DENSE` | `hash` | `openrouter` = neural embeddings (uncalibrated cut-off, costs requests, PDPL) |
 | `MIJHAR_MCP` | `1` | tools over the stdio MCP server; `0` = in-process |
+
+**Free-tier pacing:** requests to `:free` models are spaced 3.2 s apart (`MIJHAR_MIN_INTERVAL`) to stay under the per-minute limit, `Retry-After` is honoured, and a 429 for the **daily** free quota stops the model at once instead of burning retries.
 
 **What happens when things go wrong:** wrong key (401/403): no retry, the session continues on the offline planner with a visible notice · rate limit or 5xx: retried with back-off (counted), then the OpenRouter fallbacks · model without tool calling: JSON tool protocol · model removed (404): the fallback model · request cap reached: offline planner. The model choice follows the course's list of free tool-calling models (checked October 2026); free lists change, so set the variables above if a model disappears.
 

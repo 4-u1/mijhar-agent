@@ -35,7 +35,20 @@ def load_tasks(path: Path, ids: list[str] | None = None, limit: int | None = Non
                 raise ValueError(f"{t['id']}: unknown grader {g['type']!r}")
     if ids:
         tasks = [t for t in tasks if t["id"] in ids]
-    return tasks[:limit] if limit else tasks
+    return balanced(tasks, limit) if limit else tasks
+
+
+def balanced(tasks: list[dict], n: int) -> list[dict]:
+    """Category-balanced subset for free-tier runs (round-robin over categories, as the course's quick_subset)."""
+    by: dict[str, list[dict]] = {}
+    for t in tasks:
+        by.setdefault(t["category"], []).append(t)
+    out: list[dict] = []
+    while len(out) < min(n, len(tasks)):
+        for cat in sorted(by):
+            if by[cat] and len(out) < n:
+                out.append(by[cat].pop(0))
+    return out
 
 
 _DASHES = str.maketrans({c: "-" for c in "\u2010\u2011\u2012\u2013\u2014\u2212\ufe63\uff0d"})

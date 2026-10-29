@@ -104,6 +104,9 @@ class ChatModel:
         self.max_tokens = int(env("MIJHAR_AGENT_MAX_TOKENS", "2048") or 2048)
         self.use_cache = cache.enabled() if use_cache is None else use_cache
         self.calls, self.ok, self.failed, self.cache_hits = 0, 0, 0, 0
+        # Free OpenRouter models allow about 20 requests a minute: pace them instead of burning retries on 429s.
+        self.min_interval = float(env("MIJHAR_MIN_INTERVAL", "3.2") or 3.2)
+        self._last_req = 0.0
         self.run_calls: dict[str, int] = defaultdict(int)
         self.dead: str | None = None
         self.last_error: str | None = None
@@ -122,6 +125,11 @@ class ChatModel:
         k = cache.key("agent-chat", req | {"extra": extra})
         if self.use_cache and (hit := cache.get(k)):
             return hit, True
+        if self.openrouter and model.endswith(":free") and self.min_interval > 0:
+            wait = self._last_req + self.min_interval - time.monotonic()
+            if wait > 0:
+                self._sleep(wait)
+        self._last_req = time.monotonic()
         r = self.client.chat.completions.create(**req, **({"extra_body": extra} if extra else {}))
         msg = r.choices[0].message
         dump = msg.model_dump(exclude_none=True) if hasattr(msg, "model_dump") else {}
@@ -170,7 +178,12 @@ class ChatModel:
                     if code == 404:
                         break                      # model removed: try the fallback model
                     if attempt < 2:
-                        self._sleep(min(2 ** (attempt + 1), 8))
+                        ra = getattr(getattr(e, "response", None), "headers", {}) or {}
+                        try:
+                            delay = float(ra.get("retry-after", "") or 0)
+                        except (TypeError, ValueError):
+                            delay = 0.0
+                        self._sleep(min(max(delay, 2 ** (attempt + 1)), 20))   # honour Retry-After, capped
                     continue
                 if hit:
                     self.cache_hits += 1

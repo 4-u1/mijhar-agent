@@ -14,8 +14,8 @@ on:
         type: boolean
         default: true
       limit:
-        description: "Tasks per config (empty = all 18; the free tier allows ~50 requests a day)"
-        default: "6"
+        description: "Tasks per config, category-balanced (8 fits the 50-request free day; empty = all 18 with credits)"
+        default: "8"
       trials:
         description: "Trials per task (3 gives pass^3)"
         default: "1"

@@ -344,3 +344,15 @@ def test_daily_quota_429_stops_at_once(env):
     ev = run(svc, s, "incident deadline?")
     assert len(model.client.calls) == 1 and "daily" in model.dead
     assert any(e["type"] == "notice" and "offline planner" in e["text"] for e in ev)
+
+
+def test_free_model_requests_are_paced_and_limit_is_category_balanced(env):
+    from pathlib import Path
+    from mijhar.agent.evalkit import load_tasks
+    slept = []
+    model = ChatModel(OpenRouterSettings(api_key="x"), client=FakeChat([reply("a"), reply("b")]), sleep=slept.append, use_cache=False)
+    model.complete("sys", [{"role": "user", "content": "q1"}], [])
+    model.complete("sys", [{"role": "user", "content": "q2"}], [])
+    assert slept and 0 < slept[0] <= model.min_interval            # second request waited for the free-tier pace
+    sub = load_tasks(Path(__file__).resolve().parents[1] / "tasks.jsonl", limit=8)
+    assert len(sub) == 8 and len({t["category"] for t in sub}) >= 5
