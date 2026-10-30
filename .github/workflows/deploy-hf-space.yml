@@ -35,6 +35,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           DEMO_PASSWORD: ${{ secrets.MIJHAR_DEMO_PASSWORD }}
           HF_SPACE: ${{ vars.HF_SPACE }}
+          UI_ORIGIN: https://${{ vars.CF_PAGES_PROJECT || 'mijhar' }}.pages.dev
         run: |
           pip install --quiet "huggingface_hub>=0.25"
           python - <<'PY'
@@ -54,6 +55,7 @@ jobs:
                   api.add_space_secret(repo, k, v)          # values never printed
           else:
               print("MIJHAR_DEMO_PASSWORD not set: the Space runs but every request needs keys you set by hand.")
+          api.add_space_variable(repo, "MIJHAR_CORS_ORIGINS", os.environ["UI_ORIGIN"])   # the Cloudflare Pages UI may call the API
           sub = repo.replace("/", "-").replace("_", "-").lower()
           print(f"Space: https://huggingface.co/spaces/{repo}\nApp:   https://{sub}.hf.space/agent/")
           PY
